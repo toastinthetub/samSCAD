@@ -129,3 +129,41 @@ module gear20dp(n_teeth, thickness=5, pressure_angle=20, bore=5) {
         cylinder(h=thickness + 1, d=bore, center=true);
     }
 }
+
+module hollow_hex(outer_radius=20, wall_thickness=3, height=10) {
+    difference() {
+        linear_extrude(height)
+            polygon(points=regular_ngon(6, outer_radius));
+        linear_extrude(height + 2)
+            polygon(points=regular_ngon(6, outer_radius - wall_thickness));
+        translate([0, 0, -0.1]) {
+            union() {
+                linear_extrude(1) {
+                    polygon(points=regular_ngon(6, outer_radius - wall_thickness));
+                } 
+            }
+        }
+    }
+}
+
+
+module hollow_hex_capped(outer_radius=20, wall_thickness=3, height=10, dr = outer_radius - 2, dt = wall_thickness - 1, dh = height - 3, diff_translate=[0, 0, 8]) {
+    difference() {
+        linear_extrude(height)
+            polygon(points=regular_ngon(6, outer_radius));
+        linear_extrude(height + 2)
+            polygon(points=regular_ngon(6, outer_radius - wall_thickness));
+        translate([0, 0, -0.1]) {
+            union() {
+                linear_extrude(1) {
+                    polygon(points=regular_ngon(6, outer_radius - wall_thickness));
+                } 
+            }
+        }
+    }
+}
+
+// helper function to make a regular N-gon
+function regular_ngon(n, r) = 
+    [ for (i = [0 : n-1]) 
+        [ r*cos(360*i/n), r*sin(360*i/n) ] ];
