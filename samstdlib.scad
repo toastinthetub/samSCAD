@@ -167,3 +167,25 @@ module hollow_hex_capped(outer_radius=20, wall_thickness=3, height=10, dr = oute
 function regular_ngon(n, r) = 
     [ for (i = [0 : n-1]) 
         [ r*cos(360*i/n), r*sin(360*i/n) ] ];
+
+// hex_shaft(hex_d, length)
+// hex_d: flat-to-flat width of the hex
+// length: length of the shaft along the Z axis
+
+module hex_shaft(hex_d = 6, length = 100) {
+    // calculate radius from center to vertex
+    hex_radius = hex_d / cos(30);  // 30 degrees in radians = π/6, cos(π/6) = sqrt(3)/2
+
+    linear_extrude(height = length, center = true)
+        polygon(points = [
+            for (i = [0 : 5])
+                [hex_radius * cos(i * 60), hex_radius * sin(i * 60)]
+        ]);
+}
+
+module ramp(width=10, height=5, depth=5) {
+    polygon(points=[[0,0], [width,0], [0,height]]);
+    
+    linear_extrude(height=depth)
+        polygon(points=[[0,0], [width,0], [0,height]]);
+}
