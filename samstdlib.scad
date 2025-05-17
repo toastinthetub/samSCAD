@@ -184,8 +184,10 @@ module hex_shaft(hex_d = 6, length = 100) {
 }
 
 module ramp(width=10, height=5, depth=5) {
-    polygon(points=[[0,0], [width,0], [0,height]]);
-    
     linear_extrude(height=depth)
-        polygon(points=[[0,0], [width,0], [0,height]]);
+        polygon(points=[
+            [0, 0],         // bottom-left
+            [width, 0],     // bottom-right
+            [0, height]     // top-left (makes a right triangle)
+        ]);
 }
