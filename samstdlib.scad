@@ -198,22 +198,13 @@ module oval_cylinder(rx, ry, h, fn = 100) {
             circle(1, $fn=fn); // unit circle scaled to become an ellipse
 }
 
-module hex_spacer(height = 10, thickness = 2, clearance = 0.2, flat_distance = 12.7) {
-    outer_d = flat_distance + 2 * thickness;
-    
+
+module hex_spacer(height=10, wall=2, clearance=0.2, flat=12.7) {
+    r_inner = (flat + clearance) / sqrt(3);     // inner hex radius
+    r_outer = (flat + 2*wall) / sqrt(3);         // outer hex radius
+
     difference() {
-        // outer shape - hex prism
-        linear_extrude(height)
-            hexagon(d=outer_d());
-
-        // inner 1/2" hex shaft cutout with clearance
-        linear_extrude(height + 0.1) // tiny extra to avoid rendering weirdness
-            hexagon(d=flat_distance + clearance);
+        cylinder(h=height, r=r_outer, $fn=6);    // outer hex
+        cylinder(h=height + 0.1, r=r_inner, $fn=6);  // inner hex hole
     }
-}
-
-// helper: generate a hexagon from flat-to-flat distance
-module hexagon(d) {
-    r = d / (2 * cos(30)); // convert flat-to-flat to radius
-    polygon(points = [ for (i = [0:5]) [r * cos(i * 60), r * sin(i * 60)] ]);
 }
