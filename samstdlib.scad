@@ -191,3 +191,9 @@ module ramp(width=10, height=5, depth=5) {
             [0, height]     // top-left (makes a right triangle)
         ]);
 }
+
+module oval_cylinder(rx, ry, h, fn = 100) {
+    linear_extrude(height = h)
+        scale([rx, ry])
+            circle(1, $fn=fn); // unit circle scaled to become an ellipse
+}
